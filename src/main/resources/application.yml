@@ -1,0 +1,4 @@
+app:
+  docker-api-domain: http://127.0.0.1:8072
+  docker-image-version-regex: "(?<=image-version=).*(?=(\r)?\n)"
+  docker-image-name-regex: "(?<=image-name=).*(?=(\r)?\n)"
