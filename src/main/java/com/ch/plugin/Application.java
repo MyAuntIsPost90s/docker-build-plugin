@@ -103,14 +103,19 @@ public class Application {
         // 移除超出镜像
         List<String> expireImageNames = imageNames.stream().filter(o -> o.split(":")[0].equals(imageName)).sorted(Comparator.reverseOrder()).skip(historyCount).collect(Collectors.toList());
         for (String expireImageName : expireImageNames) {
-            Connection.Response response = Jsoup.connect(properties.getDockerApiDomain() + "/images/" + expireImageName)
-                    .ignoreContentType(true)
-                    .method(Connection.Method.DELETE)
-                    .execute();
-            if (response.statusCode() == 200) {
-                System.out.println("[INFO] delete history image:" + expireImageName);
-            } else {
-                System.out.println("[ERROR] delete history image:" + expireImageName + ", " + response.body());
+            try {
+                Connection.Response response = Jsoup.connect(properties.getDockerApiDomain() + "/images/" + expireImageName)
+                        .ignoreContentType(true)
+                        .method(Connection.Method.DELETE)
+                        .execute();
+                if (response.statusCode() == 200) {
+                    System.out.println("[INFO] delete history image:" + expireImageName);
+                } else {
+                    System.out.println("[ERROR] delete history image:" + expireImageName + ", " + response.body());
+                }
+            } catch (Exception e) {
+                System.err.println("[ERROR] delete history image:" + expireImageName + ", error message:" + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
